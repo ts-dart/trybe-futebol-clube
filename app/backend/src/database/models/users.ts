@@ -37,3 +37,5 @@ users.init({
   modelName: 'users',
   underscored: false,
 });
+
+export default users;
