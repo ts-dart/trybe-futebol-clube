@@ -1,7 +1,7 @@
 import { Model, STRING, INTEGER } from 'sequelize';
 import db from '.';
 
-class Users extends Model {
+class User extends Model {
   public id!: number;
   public usarname!: string;
   public role!: string;
@@ -9,7 +9,7 @@ class Users extends Model {
   public password!: string;
 }
 
-Users.init({
+User.init({
   id: {
     type: INTEGER,
     primaryKey: true,
@@ -38,4 +38,4 @@ Users.init({
   underscored: false,
 });
 
-export default Users;
+export default User;
