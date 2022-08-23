@@ -16,7 +16,7 @@ export default class LoginServices {
     return { token: Jwt.sign(body, String(process.env.JWT_SECRET)) };
   };
 
-  public loginGet = async (token: string): Promise<any> => {
+  public loginGet = async (token: string): Promise<unknown> => {
     const { email } = Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
     const userFound = await user.findOne({ where: { email } });
     return { role: userFound?.role };
