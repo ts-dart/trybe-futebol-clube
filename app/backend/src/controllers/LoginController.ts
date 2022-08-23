@@ -17,4 +17,13 @@ export default class LoginController {
       return res.status(500).send(err);
     }
   };
+
+  public loginGet = async (req: Request, res: Response): Promise<Response> => {
+    try {
+      const result = await this.loginServices.loginGet(String(req.headers.authorization));
+      return res.status(200).send(result);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  };
 }
