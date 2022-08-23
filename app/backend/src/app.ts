@@ -1,15 +1,20 @@
 import * as express from 'express';
+import LoginController from './controllers/LoginController';
 
 class App {
   public app: express.Express;
+  protected login: LoginController;
 
   constructor() {
     this.app = express();
-
     this.config();
+
+    this.login = new LoginController();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
+
+    this.app.post('/login', this.login.loginPost);
   }
 
   private config():void {

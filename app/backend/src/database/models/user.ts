@@ -1,12 +1,14 @@
-import { Model, STRING, INTEGER } from 'sequelize';
+import { Model, STRING, INTEGER, DATE } from 'sequelize';
 import db from '.';
 
 class User extends Model {
   public id!: number;
-  public usarname!: string;
+  public username!: string;
   public role!: string;
   public email!: string;
   public password!: string;
+  public createdAt!: Date;
+  public updatedAt!: Date;
 }
 
 User.init({
@@ -16,7 +18,7 @@ User.init({
     autoIncrement: true,
     allowNull: false,
   },
-  usarname: {
+  username: {
     type: STRING,
     allowNull: false,
   },
@@ -35,6 +37,7 @@ User.init({
 }, {
   sequelize: db,
   modelName: 'users',
+  timestamps: false,
   underscored: false,
 });
 
