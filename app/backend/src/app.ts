@@ -1,21 +1,27 @@
 import * as express from 'express';
 import LoginController from './controllers/LoginController';
+import TeamsController from './controllers/TeamsController';
 
 class App {
   public app: express.Express;
-  protected login: LoginController;
+  private login: LoginController;
+  private teams: TeamsController;
 
   constructor() {
     this.app = express();
     this.config();
 
     this.login = new LoginController();
+    this.teams = new TeamsController();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
 
     this.app.post('/login', this.login.loginPost);
     this.app.get('/login/validate', this.login.loginGet);
+
+    this.app.get('/teams', this.teams.getAllTeams);
+    this.app.get('/teams/:id', this.teams.getTeamsById);
   }
 
   private config():void {

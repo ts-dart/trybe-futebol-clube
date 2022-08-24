@@ -14,3 +14,8 @@ export interface TypeJwtVerify {
   password: string,
   iat: number,
 }
+
+export interface TypeTeams {
+  id: number,
+  teamName: string,
+}
