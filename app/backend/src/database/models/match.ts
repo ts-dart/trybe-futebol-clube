@@ -22,15 +22,15 @@ match.init({
     type: INTEGER,
     allowNull: false,
   },
-  homeTeamsGoal: {
+  homeTeamGoals: {
     type: INTEGER,
     allowNull: false,
   },
-  awayTeams: {
+  awayTeam: {
     type: INTEGER,
     allowNull: false,
   },
-  awayTeamsGoal: {
+  awayTeamGoals: {
     type: INTEGER,
     allowNull: false,
   },
@@ -45,7 +45,10 @@ match.init({
   underscored: false,
 });
 
-match.belongsTo(team, { foreignKey: 'homeTeam', as: 'homeTeam' });
-match.belongsTo(team, { foreignKey: 'awayTeam', as: 'awayTeam' });
+team.belongsTo(match, { foreignKey: 'homeTeam', as: 'teamHome' });
+team.belongsTo(match, { foreignKey: 'awayTeam', as: 'teamAway' });
+
+match.hasMany(team, { foreignKey: 'homeTeam', as: 'teamHome' });
+match.hasMany(team, { foreignKey: 'awayTeam', as: 'teamAway' });
 
 export default match;
