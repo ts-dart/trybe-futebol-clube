@@ -1,11 +1,13 @@
 import * as express from 'express';
 import LoginController from './controllers/LoginController';
 import TeamsController from './controllers/TeamsController';
+import MatchesController from './controllers/MatchesController';
 
 class App {
   public app: express.Express;
   private login: LoginController;
   private teams: TeamsController;
+  private matches: MatchesController;
 
   constructor() {
     this.app = express();
@@ -13,6 +15,7 @@ class App {
 
     this.login = new LoginController();
     this.teams = new TeamsController();
+    this.matches = new MatchesController();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
@@ -22,6 +25,8 @@ class App {
 
     this.app.get('/teams', this.teams.getAllTeams);
     this.app.get('/teams/:id', this.teams.getTeamsById);
+
+    this.app.get('/matches', this.matches.getAllMatches);
   }
 
   private config():void {
