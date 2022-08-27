@@ -34,8 +34,12 @@ export default class MatchesServices {
 
   public postMatch = async (token: string, body: TypeNewMatch)
   : Promise<TypeNewMatch | ReturnDefaultService> => {
-    const { email } = Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
-    if (!email) return { code: 401, msg: 'Token must be a valid token' };
+    try {
+      Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
+    } catch (_err) {
+      return { code: 401, msg: 'Token must be a valid token' };
+    }
+
     if (body.homeTeam === body.awayTeam) {
       return { code: 401, msg: 'It is not possible to create a match with two equal teams' };
     }
