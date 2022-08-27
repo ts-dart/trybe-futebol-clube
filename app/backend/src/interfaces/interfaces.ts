@@ -36,3 +36,23 @@ export interface TypeAllMatche {
     teamName: string,
   }
 }
+
+export interface TypeNewMatch {
+  homeTeam: number,
+  awayTeam: number,
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+  inProgress?: boolean,
+  code?: number,
+  msg?: string,
+}
+
+export interface TypeAlterProgressMatch {
+  message: string,
+}
+
+export interface TypeUpdateMatch {
+  homeTeamGoals?: number,
+  awayTeamGoals?: number,
+  message?: string,
+}
