@@ -36,6 +36,7 @@ export default class MatchesController {
 
   public updateMatch = async (req: Request, res: Response): Promise<Response> => {
     try {
+      console.log(req.params.id, req.body);
       const result = await this.matchesServices.updateMatch(Number(req.params.id), req.body);
       return res.status(201).send(result);
     } catch (err) {
