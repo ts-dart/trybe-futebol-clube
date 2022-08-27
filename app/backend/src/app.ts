@@ -28,7 +28,7 @@ class App {
 
     this.app.get('/matches', this.matches.getAllMatches);
     this.app.post('/matches', this.matches.postMatch);
-    // this.app.patch('/matches/:id/finish', this.matches.alterProgressMatch);
+    this.app.patch('/matches/:id/finish', this.matches.alterProgressMatch);
     this.app.patch('/matches/:id', this.matches.updateMatch);
   }
 

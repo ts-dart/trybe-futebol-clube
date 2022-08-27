@@ -28,7 +28,7 @@ export default class MatchesController {
   public alterProgressMatch = async (req: Request, res: Response): Promise<Response> => {
     try {
       const result = await this.matchesServices.alterProgressMatch(Number(req.params.id));
-      return res.status(201).send(result);
+      return res.status(200).send(result);
     } catch (err) {
       return res.status(500).send(err);
     }
@@ -38,7 +38,7 @@ export default class MatchesController {
     try {
       console.log(req.params.id, req.body);
       const result = await this.matchesServices.updateMatch(Number(req.params.id), req.body);
-      return res.status(201).send(result);
+      return res.status(200).send(result);
     } catch (err) {
       return res.status(500).send(err);
     }
