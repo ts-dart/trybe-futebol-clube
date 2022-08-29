@@ -10,7 +10,7 @@ export default class LoginServices {
 
     const { email, password } = body;
     const userFound = await user.findOne({ where: { email } });
-    const uncrypt = await bcryptjs.compare(password, String(userFound?.password));
+    const uncrypt = userFound ? await bcryptjs.compare(password, String(userFound.password)) : '';
 
     if (!userFound || !uncrypt) return { code: 401, msg: 'Incorrect email or password' };
     return { token: Jwt.sign(body, String(process.env.JWT_SECRET)) };
@@ -19,6 +19,6 @@ export default class LoginServices {
   public loginGet = async (token: string): Promise<unknown> => {
     const { email } = Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
     const userFound = await user.findOne({ where: { email } });
-    return { role: userFound?.role };
+    return userFound;
   };
 }

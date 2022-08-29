@@ -37,7 +37,10 @@ export default class MatchesServices {
     try {
       Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
     } catch (_err) {
-      return { code: 401, msg: 'Token must be a valid token' };
+      return {
+        code: 401,
+        msg: 'Token must be a valid token',
+      };
     }
 
     if (body.homeTeam === body.awayTeam) {

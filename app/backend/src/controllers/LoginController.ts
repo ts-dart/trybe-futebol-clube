@@ -20,8 +20,9 @@ export default class LoginController {
 
   public loginGet = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await this.loginServices.loginGet(String(req.headers.authorization));
-      return res.status(200).send(result);
+      const result = await this
+        .loginServices.loginGet(String(req.headers.authorization)) as { role: string };
+      return res.status(200).send({ role: result.role });
     } catch (err) {
       return res.status(500).send(err);
     }

@@ -2,12 +2,14 @@ import * as express from 'express';
 import LoginController from './controllers/LoginController';
 import TeamsController from './controllers/TeamsController';
 import MatchesController from './controllers/MatchesController';
+import LeaderboardController from './controllers/LeaderboardController';
 
 class App {
   public app: express.Express;
   private login: LoginController;
   private teams: TeamsController;
   private matches: MatchesController;
+  private leaderboard: LeaderboardController;
 
   constructor() {
     this.app = express();
@@ -16,6 +18,7 @@ class App {
     this.login = new LoginController();
     this.teams = new TeamsController();
     this.matches = new MatchesController();
+    this.leaderboard = new LeaderboardController();
 
     // Não remover essa rota
     this.app.get('/', (req, res) => res.json({ ok: true }));
@@ -30,6 +33,8 @@ class App {
     this.app.post('/matches', this.matches.postMatch);
     this.app.patch('/matches/:id/finish', this.matches.alterProgressMatch);
     this.app.patch('/matches/:id', this.matches.updateMatch);
+
+    this.app.get('/leaderboard/home', this.leaderboard.homeTeamRankings);
   }
 
   private config():void {
