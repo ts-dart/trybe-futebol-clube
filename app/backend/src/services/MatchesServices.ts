@@ -37,10 +37,7 @@ export default class MatchesServices {
     try {
       Jwt.verify(token, String(process.env.JWT_SECRET)) as TypeJwtVerify;
     } catch (_err) {
-      return {
-        code: 401,
-        msg: 'Token must be a valid token',
-      };
+      return { code: 401, msg: 'Token must be a valid token' };
     }
 
     if (body.homeTeam === body.awayTeam) {
@@ -64,9 +61,7 @@ export default class MatchesServices {
     await match.update({
       homeTeamGoals: body.homeTeamGoals,
       awayTeamGoals: body.awayTeamGoals,
-    }, {
-      where: { id },
-    });
+    }, { where: { id } });
 
     return { message: `The match identified by id ${id} has been updated successfully` };
   };

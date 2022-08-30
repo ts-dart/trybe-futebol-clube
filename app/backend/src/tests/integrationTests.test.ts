@@ -5,6 +5,7 @@ import chaiHttp = require('chai-http');
 
 import { app } from '../app';
 import user from '../database/models/user';
+import team from '../database/models/team';
 
 import * as bcryptjs from 'bcryptjs'; 
 import * as Jwt from 'jsonwebtoken';
@@ -104,3 +105,40 @@ describe('Testes de integração Rota /login/validate', () => {
     expect(response.status).to.be.equal(500);
   });
 });
+
+describe('Testes de integração Rota /teams', () => {
+  it('quando a requisição for bem sucedida,  e todos os times são retornados', async () => {
+    sinon.stub(team, 'findAll').resolves([]);
+
+    const response = await chai.request(app).get('/teams');
+
+    expect(response.status).to.equal(200);
+    expect(Array.isArray(response.body)).to.be.equal(true);
+
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    const response = await chai.request(app).get('/teams');
+    expect(response.status).to.be.equal(500);
+  });
+}); 
+
+describe('Testes de integração Rota /teams:id', () => {
+  it('quando a requisição for bem sucedida, e apenas o time correspondente ao id e retornado', async () => {
+    const modelMock: unknown = { id: 1, teamName: 'cruzeiro' };
+    sinon.stub(team, 'findByPk').resolves(modelMock as user);
+
+    const response = await chai.request(app)
+      .get('/teams/5')
+      .set('params', 'id');
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.property('teamName').equal('cruzeiro'); 
+
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    const response = await chai.request(app).get('/teams/5');
+    expect(response.status).to.be.equal(500);
+  });
+}); 

@@ -10,7 +10,8 @@ export default class LoginController {
 
   public loginPost = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await this.loginServices.loginPost(req.body);
+      const result = await this
+        .loginServices.loginPost(req.body);
       if (result.code) return res.status(result.code).send({ message: result.msg });
       return res.status(200).send(result);
     } catch (err) {

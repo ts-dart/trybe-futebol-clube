@@ -6,7 +6,8 @@ export default class Teams {
 
   public getAllTeams = async (_req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await this.teamsServices.getAllTeams();
+      const result = await this
+        .teamsServices.getAllTeams();
       return res.status(200).send(result);
     } catch (err) {
       return res.status(500).send(err);
@@ -15,7 +16,8 @@ export default class Teams {
 
   public getTeamsById = async (req: Request, res: Response): Promise<Response> => {
     try {
-      const result = await this.teamsServices.getTeamsById(Number(req.params.id));
+      const result = await this
+        .teamsServices.getTeamsById(Number(req.params.id));
       return res.status(200).send(result);
     } catch (err) {
       return res.status(500).send(err);
