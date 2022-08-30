@@ -144,7 +144,7 @@ describe('Testes de integração Rota /teams/:id', () => {
   });
 }); 
 
-describe('Testes de integração Rota /matches', () => {
+describe('Testes de integração Rota get /matches', () => {
   it('quando a requisição for bem sucedida, quando o progress e passado', async () => {
     const modelMock: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
     sinon.stub(match, 'findAll').resolves([modelMock as user]);
@@ -177,7 +177,7 @@ describe('Testes de integração Rota /matches', () => {
   });
 });
 
-describe('Testes de integração Rota /matches', () => {
+describe('Testes de integração Rota post /matches', () => {
   it('quando a requisição for bem sucedida', async () => {
     sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
 
@@ -274,5 +274,46 @@ describe('Testes de integração Rota /matches', () => {
       });
 
     expect(response.status).to.be.equal(500);
+  });
+});
+
+describe('Testes de integração Rota /matches/:id/finish', () => {
+  it('quando a requisição e bem sucedida', async () => {
+    sinon.stub(match, 'update').resolves();
+    const response = await chai.request(app).patch('/matches/5/finish').set('params', 'id');
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.property('message').equal('Finished'); 
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    const response = await chai.request(app).patch('/matches/5/finish').set('params', 'id');
+    expect(response.status).to.equal(500);
+  });
+});
+
+describe('Testes de integração Rota /matches/:id', () => {
+  it('quando a requisição e bem sucedida', async () => {
+    sinon.stub(match, 'update').resolves();
+    const response = await chai.request(app)
+      .patch('/matches/5')
+      .set('params', 'id')
+      .send({
+        homeTeamGoals: 3,
+        awayTeamGoals: 1
+      });
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.property('message')
+      .equal('The match identified by id 5 has been updated successfully'); 
+
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    const response = await chai.request(app)
+      .patch('/matches/5').set('params', 'id').send({ homeTeamGoals: 3, awayTeamGoals: 1 });
+
+    expect(response.status).to.equal(500);
+    sinon.restore();
   });
 });
