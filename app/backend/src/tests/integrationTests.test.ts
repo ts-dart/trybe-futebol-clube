@@ -130,8 +130,7 @@ describe('Testes de integração Rota /teams/:id', () => {
     sinon.stub(team, 'findByPk').resolves(modelMock as user);
 
     const response = await chai.request(app)
-      .get('/teams/5')
-      .set('params', 'id');
+      .get('/teams/5').set('params', 'id');
 
     expect(response.status).to.equal(200);
     expect(response.body).to.have.property('teamName').equal('cruzeiro'); 
