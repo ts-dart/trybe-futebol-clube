@@ -177,7 +177,7 @@ describe('Testes de integração Rota /matches', () => {
   });
 });
 
-/* describe('Testes de integração Rota /matches', () => {
+describe('Testes de integração Rota /matches', () => {
   it('quando a requisição for bem sucedida', async () => {
     sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
 
@@ -185,7 +185,7 @@ describe('Testes de integração Rota /matches', () => {
     sinon.stub(team, 'findOne').resolves(modelMockFindOne as user);
 
     const modelMockCreate: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
-    sinon.stub(team, 'create').resolves(modelMockCreate as user);
+    sinon.stub(match, 'create').resolves(modelMockCreate as user);
 
     const response = await chai.request(app)
       .post('/matches')
@@ -197,9 +197,82 @@ describe('Testes de integração Rota /matches', () => {
         awayTeamGoals: 2
       });
 
-    expect(response.status).to.equal(200);
-    expect(response.body).to.have.property('inProgress').equal('true'); 
+    expect(response.status).to.equal(201);
+    expect(response.body).to.have.property('inProgress').equal(true); 
 
     sinon.restore();
   });
-}); */
+  it('quando a requisição falhar pois não foi fornecido um token correto', async () => {
+    const response = await chai.request(app)
+      .post('/matches')
+      .send({ homeTeam: 16, awayTeam: 8, homeTeamGoals: 2, awayTeamGoals: 2 });
+
+    expect(response.status).to.equal(401);
+    expect(response.body).to.have.property('message').equal('Token must be a valid token'); 
+
+    sinon.restore();
+  });
+  it('quando a requisição falhar pois e fornecido dois times iguais', async () => {
+    sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
+
+    const modelMockFindOne: unknown = { id: 1, teamName: 'cruzeiro'};
+    sinon.stub(team, 'findOne').resolves(modelMockFindOne as user);
+
+    const modelMockCreate: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
+    sinon.stub(match, 'create').resolves(modelMockCreate as user);
+
+    const response = await chai.request(app)
+      .post('/matches')
+      .set('authorization', 'fgvbcgdfg54fdgh')
+      .send({
+        homeTeam: 5,
+        awayTeam: 5,
+        homeTeamGoals: 2,
+        awayTeamGoals: 2
+      });
+
+    expect(response.status).to.equal(401);
+    expect(response.body).to.have.property('message')
+      .equal('It is not possible to create a match with two equal teams'); 
+
+    sinon.restore();
+  });
+  it('quando a requisição falhar pois o id fornecido na requisição não corresponde a um time', async () => {
+    sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
+    sinon.stub(team, 'findOne').resolves();
+
+    const modelMockCreate: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
+    sinon.stub(match, 'create').resolves(modelMockCreate as user);
+
+    const response = await chai.request(app)
+      .post('/matches')
+      .set('authorization', 'fgvbcgdfg54fdgh')
+      .send({
+        homeTeam: 1000,
+        awayTeam: 0,
+        homeTeamGoals: 2,
+        awayTeamGoals: 2
+      });
+
+    expect(response.status).to.equal(404);
+    expect(response.body).to.have.property('message')
+      .equal('There is no team with such id!'); 
+
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
+
+    const response = await chai.request(app)
+      .post('/matches')
+      .set('authorization', 'fgvbcgdfg54fdgh')
+      .send({
+        homeTeam: 16,
+        awayTeam: 5,
+        homeTeamGoals: 2,
+        awayTeamGoals: 2
+      });
+
+    expect(response.status).to.be.equal(500);
+  });
+});
