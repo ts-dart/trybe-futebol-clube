@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import user from '../database/models/user';
 import team from '../database/models/team';
+import match from '../database/models/match';
 
 import * as bcryptjs from 'bcryptjs'; 
 import * as Jwt from 'jsonwebtoken';
@@ -123,7 +124,7 @@ describe('Testes de integração Rota /teams', () => {
   });
 }); 
 
-describe('Testes de integração Rota /teams:id', () => {
+describe('Testes de integração Rota /teams/:id', () => {
   it('quando a requisição for bem sucedida, e apenas o time correspondente ao id e retornado', async () => {
     const modelMock: unknown = { id: 1, teamName: 'cruzeiro' };
     sinon.stub(team, 'findByPk').resolves(modelMock as user);
@@ -142,3 +143,63 @@ describe('Testes de integração Rota /teams:id', () => {
     expect(response.status).to.be.equal(500);
   });
 }); 
+
+describe('Testes de integração Rota /matches', () => {
+  it('quando a requisição for bem sucedida, quando o progress e passado', async () => {
+    const modelMock: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
+    sinon.stub(match, 'findAll').resolves([modelMock as user]);
+
+    const response = await chai.request(app)
+      .get('/matches?inProgress=true')
+
+    expect(response.status).to.equal(200);
+    expect(response.body[0]).to.have.property('teamName').equal('cruzeiro'); 
+
+    sinon.restore();
+  });
+  it('quando a requisição for bem sucedida, quando o progress não e passado', async () => {
+    const modelMock: unknown = { id: 1, teamName: 'cruzeiro'};
+    sinon.stub(match, 'findAll').resolves([modelMock as user]);
+
+    const response = await chai.request(app).get('/matches')
+
+    expect(response.status).to.equal(200);
+    expect(response.body[0]).to.have.property('teamName').equal('cruzeiro'); 
+
+    sinon.restore();
+  });
+  it('quando ocorre um erro interno', async () => {
+    const response = await chai.request(app)
+      .get('/matches?inProgress=true')
+      .set('query', 'inProgress');
+
+    expect(response.status).to.be.equal(500);
+  });
+});
+
+/* describe('Testes de integração Rota /matches', () => {
+  it('quando a requisição for bem sucedida', async () => {
+    sinon.stub(Jwt, 'verify').resolves({ email: 'test@test.com' });
+
+    const modelMockFindOne: unknown = { id: 1, teamName: 'cruzeiro'};
+    sinon.stub(team, 'findOne').resolves(modelMockFindOne as user);
+
+    const modelMockCreate: unknown = { id: 1, teamName: 'cruzeiro', inProgress: true};
+    sinon.stub(team, 'create').resolves(modelMockCreate as user);
+
+    const response = await chai.request(app)
+      .post('/matches')
+      .set('authorization', 'fgvbcgdfg54fdgh')
+      .send({
+        homeTeam: 16,
+        awayTeam: 8,
+        homeTeamGoals: 2,
+        awayTeamGoals: 2
+      });
+
+    expect(response.status).to.equal(200);
+    expect(response.body).to.have.property('inProgress').equal('true'); 
+
+    sinon.restore();
+  });
+}); */
