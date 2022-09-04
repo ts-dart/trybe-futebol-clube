@@ -12,7 +12,7 @@ O tfc e um site relativo a futebol e possivel ver classificação de times, jogo
 
 Nesse projeto foi desenvolvido um backend utilizando Docker e TypeScript, a modelagem de dodos foi feita utilzando Sequelize. esse projeto consiste em desenvolver uma API, essa API deve consumir um banco de dados e deve ser consumida por um frontend.
 
-OBS: O frontend e os arquivos docker-compose, sql foram fornecios pela trybe.
+OBS: O frontend e os arquivos .yml, .sql, .sh foram fornecios pela trybe.
 
 ### Habilidades
 Habilidades desenvolvidas neste projeto.
